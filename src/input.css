@@ -1,0 +1,166 @@
+/* ─────────────────────────────────────────────────────────────
+   Special Branch – source styles
+   Edit this file, then run `npm run build` to regenerate
+   assets/css/styles.css (that's the file the site actually loads).
+   ───────────────────────────────────────────────────────────── */
+/* Self-hosted fonts (both SIL Open Font License – see assets/fonts/) */
+@font-face { font-family: 'Zilla Slab'; font-style: normal; font-display: swap; font-weight: 600; src: url('../fonts/zilla-slab-600.woff2') format('woff2'); }
+@font-face { font-family: 'Zilla Slab'; font-style: normal; font-display: swap; font-weight: 700; src: url('../fonts/zilla-slab-700.woff2') format('woff2'); }
+@font-face { font-family: 'Figtree'; font-style: normal; font-display: swap; font-weight: 300 900; src: url('../fonts/figtree-variable.woff2') format('woff2'); }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+  body { @apply bg-paper font-sans text-forest-900 antialiased; }
+  ::selection { @apply bg-leaf-200 text-forest-900; }
+  :focus-visible { @apply outline-none ring-2 ring-brand-500 ring-offset-2; }
+  /* Anchor targets sit below the sticky header */
+  section[id] { scroll-margin-top: 4.5rem; }
+}
+
+@layer components {
+  /* Buttons */
+  .btn {
+    @apply inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full px-6 py-3 text-[15px] font-bold
+           transition duration-200 ease-out active:scale-[.98];
+  }
+  .btn-primary { @apply btn bg-brand-600 text-white shadow-soft hover:bg-brand-700 hover:-translate-y-0.5; }
+  .btn-dark    { @apply btn bg-forest-800 text-white shadow-soft hover:bg-forest-900 hover:-translate-y-0.5; }
+  .btn-ghost   { @apply btn border border-forest-900/15 bg-white/80 text-forest-900 hover:border-forest-900/30 hover:bg-white; }
+  .btn-light   { @apply btn bg-white text-forest-900 hover:bg-leaf-50 hover:-translate-y-0.5; }
+
+  /* Small label above some headings */
+  .eyebrow { @apply inline-flex items-center gap-2 text-[13px] font-bold uppercase tracking-[0.16em] text-brand-600; }
+
+  .h2 { @apply font-display text-[2.1rem] font-bold leading-[1.05] tracking-[-0.01em] text-forest-900 sm:text-5xl; }
+  .lead { @apply text-[17px] leading-relaxed text-forest-900/75 sm:text-lg; }
+
+  /* Form fields */
+  .field {
+    @apply block w-full rounded-xl border border-forest-900/15 bg-white px-4 py-3 text-base text-forest-900
+           placeholder:text-forest-900/40 transition focus:border-forest-600 focus:outline-none focus:ring-4 focus:ring-leaf-300/50;
+  }
+  .field.is-invalid { @apply border-brand-500 ring-4 ring-brand-500/10; }
+  .label { @apply mb-1.5 block text-sm font-semibold text-forest-900; }
+  .field-error { @apply mt-1.5 hidden text-sm font-medium text-brand-700; }
+  .is-invalid + .field-error, .is-invalid ~ .field-error { @apply block; }
+
+  /* Nav links */
+  .nav-link { @apply relative py-2 text-[15px] font-semibold text-forest-900/80 transition hover:text-forest-900; }
+  .nav-link::after {
+    content: ''; @apply absolute bottom-0 left-0 h-0.5 w-full origin-left scale-x-0 rounded bg-brand-500 transition-transform duration-300;
+  }
+  .nav-link:hover::after, .nav-link.is-active::after { @apply scale-x-100; }
+
+  /* Line-art used for icons and small illustrations */
+  .lineart { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* Services explorer */
+  .svc-tab {
+    @apply flex w-full items-center gap-4 rounded-2xl border border-transparent px-4 py-3.5 text-left transition duration-200;
+  }
+  .svc-tab:hover { @apply bg-white/70; }
+  .svc-tab[aria-selected="true"] { @apply border-forest-900/10 bg-white shadow-soft; }
+  .svc-tab .svc-ico { @apply grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-leaf-100 text-forest-700 transition duration-300; }
+  .svc-tab[aria-selected="true"] .svc-ico { @apply bg-forest-800 text-leaf-200; }
+  .svc-chip {
+    @apply inline-flex min-h-[44px] shrink-0 snap-start items-center gap-2 rounded-full border border-forest-900/15 bg-white px-4 text-sm font-semibold text-forest-800 transition;
+  }
+  .svc-chip[aria-selected="true"] { @apply border-forest-800 bg-forest-800 text-white; }
+  .tick { @apply flex gap-3 text-[15px] leading-snug text-forest-900/80; }
+}
+
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+  .no-scrollbar { scrollbar-width: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  /* Faint contour lines, like a survey map, behind some sections */
+  .bg-rings {
+    background-image: repeating-radial-gradient(circle at 85% 20%, transparent 0 34px, rgba(79,125,93,.07) 34px 35px);
+  }
+}
+
+/* ── Scroll reveal ──────────────────────────────────────────── */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1); transition-delay: var(--d, 0ms); }
+.reveal.is-in { opacity: 1; transform: none; }
+/* Before JS runs (or without it) everything is visible */
+.no-js .reveal { opacity: 1; transform: none; }
+
+/* ── Self-drawing strokes (use pathLength="1" on the path) ─── */
+.draw .d { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.8s cubic-bezier(.65,0,.35,1); transition-delay: var(--d, 0ms); }
+.draw.is-in .d { stroke-dashoffset: 0; }
+
+/* ── Trees swaying in a light breeze ───────────────────────── */
+/* Each tree is a <use> or <g>; transform-box keeps the pivot at the base of the trunk */
+.sway { transform-box: fill-box; transform-origin: 50% 100%; animation: sway 7s ease-in-out infinite; }
+.sway-b { animation-duration: 9s; animation-delay: -3s; }
+.sway-c { animation-duration: 8s; animation-delay: -5s; }
+@keyframes sway { 0%, 100% { transform: rotate(-1.2deg); } 50% { transform: rotate(1.2deg); } }
+
+/* Storm band: the tree leans into the wind and recovers */
+.gust { transform-box: fill-box; transform-origin: 50% 100%; animation: gust 5s ease-in-out infinite; }
+@keyframes gust { 0%, 100% { transform: rotate(0deg) skewX(0deg); } 35% { transform: rotate(5deg) skewX(3deg); } 55% { transform: rotate(2deg) skewX(1deg); } 70% { transform: rotate(4deg) skewX(2deg); } }
+.wind { stroke-dasharray: 60 140; animation: wind 2.6s linear infinite; }
+@keyframes wind { from { stroke-dashoffset: 200; } to { stroke-dashoffset: 0; } }
+.blown { animation: blown 5s linear infinite; }
+@keyframes blown { 0% { transform: translate(0, 0) rotate(0); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translate(260px, 40px) rotate(540deg); opacity: 0; } }
+
+/* Climbing rope + karabiner swinging gently in the hero */
+.swing { transform-box: view-box; transform-origin: var(--ox, 50%) 0; animation: swing 6s ease-in-out infinite; }
+@keyframes swing { 0%, 100% { transform: rotate(-2.5deg); } 50% { transform: rotate(2.5deg); } }
+
+/* ── Falling leaves (generated in main.js) ─────────────────── */
+.leaf-fall { position: absolute; top: 0; pointer-events: none; animation: leaf-fall linear infinite; will-change: transform; }
+.leaf-fall svg { animation: leaf-spin ease-in-out infinite alternate; animation-duration: inherit; }
+@keyframes leaf-fall {
+  0% { transform: translate3d(0, -8vh, 0); opacity: 0; }
+  8% { opacity: 1; }
+  92% { opacity: 1; }
+  100% { transform: translate3d(var(--drift, 60px), 105vh, 0); opacity: 0; }
+}
+@keyframes leaf-spin { 0% { transform: rotate(-35deg) translateX(-14px); } 100% { transform: rotate(55deg) translateX(14px); } }
+
+/* ── Sawdust puffing from the chainsaw cut (hero photo card) ── */
+.dust { animation: dust 2.4s ease-out infinite; transform-box: fill-box; }
+@keyframes dust { 0% { transform: translate(0, 0) scale(.6); opacity: 0; } 20% { opacity: .9; } 100% { transform: translate(var(--dx, 18px), var(--dy, -16px)) scale(1.1); opacity: 0; } }
+
+/* ── Services panel transitions ─────────────────────────────── */
+.svc-panel[hidden] { display: none; }
+.svc-panel.is-showing { animation: panel-in .5s cubic-bezier(.2,.7,.2,1); }
+@keyframes panel-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+/* ── Gallery + lightbox ─────────────────────────────────────── */
+.work-tile img { transition: transform .7s cubic-bezier(.2,.7,.2,1); }
+.work-tile:hover img { transform: scale(1.05); }
+#lightbox { transition: opacity .25s ease; }
+#lightbox[data-open="false"] { opacity: 0; pointer-events: none; }
+#lightbox .lb-img { transition: opacity .25s ease, transform .25s ease; }
+#lightbox .lb-img.is-swapping { opacity: 0; transform: scale(.98); }
+
+/* ── Mobile menu ────────────────────────────────────────────── */
+#mobile-menu { transition: opacity .25s ease, transform .25s ease; }
+#mobile-menu[data-open="false"] { opacity: 0; transform: translateY(-8px); pointer-events: none; }
+
+/* ── Header gets a backing once you scroll ─────────────────── */
+#site-header { transition: background-color .3s ease, box-shadow .3s ease; }
+#site-header.is-scrolled { background-color: rgba(250,248,242,.94); box-shadow: 0 1px 0 rgba(22,41,31,.08), 0 8px 24px -16px rgba(22,41,31,.3); backdrop-filter: saturate(1.4) blur(8px); }
+
+/* ── Mobile call/quote bar slides in after the hero ────────── */
+#mobile-bar { transition: transform .35s cubic-bezier(.2,.7,.2,1); }
+#mobile-bar[data-show="false"] { transform: translateY(110%); }
+
+/* ── Form submit spinner ───────────────────────────────────── */
+.spinner { width: 18px; height: 18px; border-radius: 9999px; border: 2px solid rgba(255,255,255,.4); border-top-color: #fff; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .draw .d { stroke-dashoffset: 0 !important; transition: none !important; }
+  .sway, .gust, .wind, .blown, .swing, .dust, .animate-floaty, .svc-panel.is-showing { animation: none !important; }
+  .leaf-fall, .blown, .dust { display: none; }
+  .work-tile img { transition: none; }
+}
